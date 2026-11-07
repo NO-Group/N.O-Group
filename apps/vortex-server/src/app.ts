@@ -1,14 +1,14 @@
 import express, { json } from 'express';
 import { mkdir } from 'node:fs/promises';
-import { loadEnv } from './config/env';
-import { errorMiddleware } from './core/http';
-import { DriverRegistry } from './core/factory/driver.registry';
-import { createLogger } from './core/logger';
-import { vortexStorageGuard, parseRlsRules } from './guards/vortex-storage.guard';
-import { TransformService } from './media/transform.service';
-import { createStorageRouter } from './routes/storage.routes';
-import { MultipartJanitor } from './services/multipart-janitor';
-import { WebhookService } from './webhooks/webhook.service';
+import { loadEnv } from './config/env.js';
+import { errorMiddleware } from './core/http.js';
+import { DriverRegistry } from './core/factory/driver.registry.js';
+import { createLogger } from './core/logger.js';
+import { vortexStorageGuard, parseRlsRules } from './guards/vortex-storage.guard.js';
+import { TransformService } from './media/transform.service.js';
+import { createStorageRouter } from './routes/storage.routes.js';
+import { MultipartJanitor } from './services/multipart-janitor.js';
+import { WebhookService } from './webhooks/webhook.service.js';
 
 export interface BuiltApp {
   app: express.Express;

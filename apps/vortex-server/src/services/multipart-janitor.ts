@@ -1,11 +1,11 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import type { Logger } from '../core/logger';
+import type { Logger } from '../core/logger.js';
 import type {
   IVortexMultipartAborter,
   IVortexStorageDriver,
   VortexStorageProvider,
-} from '../core/types/storage.types';
+} from '../core/types/storage.types.js';
 
 /* ================================================================== *
  *  Multipart Janitor — 24h orphan cleanup                             *

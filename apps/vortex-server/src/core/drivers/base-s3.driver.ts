@@ -23,7 +23,7 @@ import {
   sanitizeObjectKey,
   streamToBuffer,
   webToNode,
-} from '../stream.utils';
+} from '../stream.utils.js';
 import type {
   IVortexMultipartAborter,
   IVortexStorageDriver,
@@ -31,7 +31,7 @@ import type {
   PresignedUrlOptions,
   StorageObjectMetadata,
   VortexStorageProvider,
-} from '../types/storage.types';
+} from '../types/storage.types.js';
 
 export interface BaseS3DriverOptions {
   bucket: string;

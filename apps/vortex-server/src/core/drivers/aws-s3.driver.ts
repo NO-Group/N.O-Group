@@ -1,6 +1,6 @@
 import { S3Client } from '@aws-sdk/client-s3';
-import { BaseS3Driver } from './base-s3.driver';
-import type { AwsS3DriverConfig } from '../types/storage.types';
+import { BaseS3Driver } from './base-s3.driver.js';
+import type { AwsS3DriverConfig } from '../types/storage.types.js';
 
 /**
  * Amazon Web Services S3 — enterprise compliance tier.

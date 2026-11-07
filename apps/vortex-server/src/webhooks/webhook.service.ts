@@ -1,8 +1,8 @@
 import { appendFile, mkdir } from 'node:fs/promises';
 import { createHmac, randomUUID } from 'node:crypto';
 import path from 'node:path';
-import type { Logger } from '../core/logger';
-import type { VortexStorageProvider } from '../core/types/storage.types';
+import type { Logger } from '../core/logger.js';
+import type { VortexStorageProvider } from '../core/types/storage.types.js';
 
 /* ================================================================== *
  *  Event-Driven Webhooks                                              *

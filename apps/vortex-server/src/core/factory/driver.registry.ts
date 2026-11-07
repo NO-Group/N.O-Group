@@ -1,18 +1,18 @@
-import type { VortexEnv } from '../../config/env';
-import { HttpError } from '../http';
-import type { Logger } from '../logger';
-import { AzureBlobDriver } from '../drivers/azure-blob.driver';
-import { AwsS3Driver } from '../drivers/aws-s3.driver';
-import { CloudflareR2Driver } from '../drivers/cloudflare-r2.driver';
-import { DigitalOceanSpacesDriver } from '../drivers/digitalocean-spaces.driver';
-import { GoogleCloudStorageDriver } from '../drivers/gcs.driver';
-import { LocalDiskDriver } from '../drivers/local-disk.driver';
+import type { VortexEnv } from '../../config/env.js';
+import { HttpError } from '../http.js';
+import type { Logger } from '../logger.js';
+import { AzureBlobDriver } from '../drivers/azure-blob.driver.js';
+import { AwsS3Driver } from '../drivers/aws-s3.driver.js';
+import { CloudflareR2Driver } from '../drivers/cloudflare-r2.driver.js';
+import { DigitalOceanSpacesDriver } from '../drivers/digitalocean-spaces.driver.js';
+import { GoogleCloudStorageDriver } from '../drivers/gcs.driver.js';
+import { LocalDiskDriver } from '../drivers/local-disk.driver.js';
 import type {
   IVortexStorageDriver,
   ProviderDescriptor,
   VortexStorageProvider,
-} from '../types/storage.types';
-import { VORTEX_PROVIDERS } from '../types/storage.types';
+} from '../types/storage.types.js';
+import { VORTEX_PROVIDERS } from '../types/storage.types.js';
 
 interface ProviderMeta {
   label: string;

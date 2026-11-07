@@ -1,9 +1,9 @@
 import { createHash } from 'node:crypto';
 import { mkdir, readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { HttpError } from '../core/http';
-import type { Logger } from '../core/logger';
-import type { IVortexStorageDriver } from '../core/types/storage.types';
+import { HttpError } from '../core/http.js';
+import type { Logger } from '../core/logger.js';
+import type { IVortexStorageDriver } from '../core/types/storage.types.js';
 
 /* ================================================================== *
  *  Dynamic Edge Image Transformation                                  *
@@ -164,7 +164,7 @@ export class TransformService {
     try {
       if (typeof driver.downloadBuffer !== 'function') {
         const { stream } = await driver.downloadObject(params.path);
-        const { streamToBuffer } = await import('../core/stream.utils');
+        const { streamToBuffer } = await import('../core/stream.utils.js');
         source = await streamToBuffer(stream);
       } else {
         source = (await driver.downloadBuffer(params.path)).buffer;

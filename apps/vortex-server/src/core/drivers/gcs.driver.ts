@@ -1,6 +1,6 @@
 import { S3Client } from '@aws-sdk/client-s3';
-import { BaseS3Driver } from './base-s3.driver';
-import type { GcsDriverConfig } from '../types/storage.types';
+import { BaseS3Driver } from './base-s3.driver.js';
+import type { GcsDriverConfig } from '../types/storage.types.js';
 
 /**
  * Google Cloud Storage — AI/ML & analytics tier.

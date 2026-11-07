@@ -1,6 +1,6 @@
 import { S3Client } from '@aws-sdk/client-s3';
-import { BaseS3Driver } from './base-s3.driver';
-import type { DigitalOceanDriverConfig } from '../types/storage.types';
+import { BaseS3Driver } from './base-s3.driver.js';
+import type { DigitalOceanDriverConfig } from '../types/storage.types.js';
 
 /**
  * DigitalOcean Spaces — indie developer & staging tier.

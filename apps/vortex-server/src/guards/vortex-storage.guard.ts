@@ -1,8 +1,8 @@
 import { timingSafeEqual } from 'node:crypto';
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { HttpError } from '../core/http';
-import type { Logger } from '../core/logger';
+import { HttpError } from '../core/http.js';
+import type { Logger } from '../core/logger.js';
 
 /* ================================================================== *
  *  VortexStorageGuard — Row-Level Access Security (RLS)               *

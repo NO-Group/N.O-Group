@@ -1,17 +1,17 @@
 import { Router, raw } from 'express';
 import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
-import type { VortexEnv } from '../config/env';
-import { HttpError, ah } from '../core/http';
-import type { DriverRegistry } from '../core/factory/driver.registry';
-import type { Logger } from '../core/logger';
-import type { LocalDiskDriver } from '../core/drivers/local-disk.driver';
-import { TransformService } from '../media/transform.service';
-import type { MultipartJanitor } from '../services/multipart-janitor';
-import { WebhookService } from '../webhooks/webhook.service';
-import type { MultipartUploadPart, VortexStorageProvider } from '../core/types/storage.types';
-import { VORTEX_PROVIDERS } from '../core/types/storage.types';
-import { adminGuard } from '../guards/vortex-storage.guard';
+import type { VortexEnv } from '../config/env.js';
+import { HttpError, ah } from '../core/http.js';
+import type { DriverRegistry } from '../core/factory/driver.registry.js';
+import type { Logger } from '../core/logger.js';
+import type { LocalDiskDriver } from '../core/drivers/local-disk.driver.js';
+import { TransformService } from '../media/transform.service.js';
+import type { MultipartJanitor } from '../services/multipart-janitor.js';
+import { WebhookService } from '../webhooks/webhook.service.js';
+import type { MultipartUploadPart, VortexStorageProvider } from '../core/types/storage.types.js';
+import { VORTEX_PROVIDERS } from '../core/types/storage.types.js';
+import { adminGuard } from '../guards/vortex-storage.guard.js';
 
 export interface StorageRouterDeps {
   env: VortexEnv;

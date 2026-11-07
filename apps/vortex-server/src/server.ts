@@ -1,5 +1,5 @@
-import { buildApp } from './app';
-import { createLogger } from './core/logger';
+import { buildApp } from './app.js';
+import { createLogger } from './core/logger.js';
 
 const logger = createLogger('vortex:bootstrap');
 

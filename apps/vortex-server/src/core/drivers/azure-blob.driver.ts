@@ -17,7 +17,7 @@ import {
   sanitizeObjectKey,
   streamToBuffer,
   webToNode,
-} from '../stream.utils';
+} from '../stream.utils.js';
 import type {
   AzureDriverConfig,
   IVortexMultipartAborter,
@@ -25,7 +25,7 @@ import type {
   MultipartUploadPart,
   PresignedUrlOptions,
   StorageObjectMetadata,
-} from '../types/storage.types';
+} from '../types/storage.types.js';
 
 /**
  * Microsoft Azure Blob Storage — corporate enterprise IT tier.

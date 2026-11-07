@@ -1,6 +1,6 @@
 import { S3Client } from '@aws-sdk/client-s3';
-import { BaseS3Driver } from './base-s3.driver';
-import type { R2DriverConfig } from '../types/storage.types';
+import { BaseS3Driver } from './base-s3.driver.js';
+import type { R2DriverConfig } from '../types/storage.types.js';
 
 /**
  * Cloudflare R2 — the DEFAULT managed Vortex Cloud engine.

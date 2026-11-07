@@ -8,7 +8,7 @@ import type {
   LocalDiskDriverConfig,
   R2DriverConfig,
   VortexStorageProvider,
-} from '../core/types/storage.types';
+} from '../core/types/storage.types.js';
 
 /* ------------------------------------------------------------------ */
 /*  Tiny .env loader (no dependency): KEY=VALUE lines, `#` comments,  */
