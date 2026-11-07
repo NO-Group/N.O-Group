@@ -11,7 +11,7 @@
 
 ---
 
-This monorepo contains the **Vortex Storage Engine** and its **Dashboard Management
+This repo contains the **Vortex Storage Engine** and its **Dashboard Management
 Interface**: a fully typed, production-ready TypeScript implementation of a unified
 S3-compatible object-storage layer across six cloud targets, with a Cloudinary-style
 media pipeline, cryptographically signed webhooks, row-level security, and an
