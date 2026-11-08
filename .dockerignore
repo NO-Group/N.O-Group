@@ -1,0 +1,10 @@
+.git
+**/node_modules
+**/.env*
+**/.dev.vars*
+**/.data
+**/.wrangler
+**/dist
+**/test-results
+assets
+docs
