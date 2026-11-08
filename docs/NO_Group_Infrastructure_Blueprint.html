@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #333; margin: 40px; }
+    h1 { color: #1a365d; font-size: 28px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+    h2 { color: #2b6cb0; font-size: 20px; margin-top: 30px; }
+    .meta-box { background-color: #f7fafc; border-left: 4px solid #4299e1; padding: 15px; margin-bottom: 25px; border-radius: 0 4px 4px 0; }
+    .meta-title { font-weight: bold; color: #2d3748; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; margin-bottom: 30px; }
+    th { background-color: #2b6cb0; color: white; text-align: left; padding: 12px; font-size: 14px; }
+    td { padding: 12px; border-bottom: 1px solid #e2e8f0; font-size: 14px; vertical-align: top; }
+    tr:nth-child(even) { background-color: #f8fafc; }
+    .repo-link { font-family: monospace; color: #3182ce; font-weight: bold; }
+    .badge { display: inline-block; background-color: #edf2f7; color: #4a5568; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+    .footer { font-size: 12px; color: #718096; text-align: center; margin-top: 50px; border-top: 1px solid #e2e8f0; padding-top: 20px; }
+</style>
+</head>
+<body>
+
+<h1>N.O Group Master Infrastructure Blueprints</h1>
+
+<div class="meta-box">
+    <div class="meta-title">Strategic Architecture Manifest</div>
+    <div>Prepared for the Vision and Long-Term Development of N.O Group. This document archives the core open-source repositories secured as the foundational layers of the conglomerate's sovereign tech stack.</div>
+</div>
+
+<h2>1. User-Facing Corporate Applications</h2>
+<table>
+    <tr>
+        <th style="width: 25%;">Component Brand Name</th>
+        <th style="width: 35%;">Official Repository Links</th>
+        <th style="width: 40%;">Strategic Reason for Forking & Blueprint Purpose</th>
+    </tr>
+    <tr>
+        <td><strong>N.O Workspace</strong><br><span class="badge">Nextcloud</span></td>
+        <td><a class="repo-link" href="https://github.com/nextcloud/all-in-one">nextcloud/all-in-one</a></td>
+        <td>Instantly deploys a complete, secure alternative to Google Workspace and Microsoft 365. Contains modules for files, team calendars, relational databases, and server-side automation. The All-in-One architecture allows rapid deployment of the corporate suite under the N.O brand.</td>
+    </tr>
+    <tr>
+        <td><strong>N.O Connect</strong><br><span class="badge">Signal Ecosystem</span></td>
+        <td>
+            <a class="repo-link" href="https://github.com/signalapp/Signal-Server">signalapp/Signal-Server</a><br>
+            <a class="repo-link" href="https://github.com/signalapp/Signal-Android">signalapp/Signal-Android</a><br>
+            <a class="repo-link" href="https://github.com/signalapp/Signal-iOS">signalapp/Signal-iOS</a><br>
+            <a class="repo-link" href="https://github.com/signalapp/Signal-Desktop">signalapp/Signal-Desktop</a>
+        </td>
+        <td>Provides an unhackable, military-grade internal messaging framework. Inherits the cryptographic Signal Protocol for absolute end-to-end encryption. Modifying the frontend clients allows full layout customization to N.O Group aesthetics, while keeping the untouched backend server secure and easy to sync with official updates.</td>
+    </tr>
+    <tr>
+        <td><strong>N.O Office</strong><br><span class="badge">LibreOffice Core</span></td>
+        <td><a class="repo-link" href="https://github.com/LibreOffice/core">LibreOffice/core</a></td>
+        <td>Serves as the foundational codebase for a heavy-duty local desktop office suite alternative to Microsoft Word, Excel, and PowerPoint. Ensures N.O Group computers have robust, sovereign processing power over offline business documents without third-party tracking.</td>
+    </tr>
+</table>
+
+<h2>2. Tungsten & Vortex Engine Infrastructure</h2>
+<table>
+    <tr>
+        <th style="width: 25%;">Infrastructure Pillar</th>
+        <th style="width: 35%;">Official Repository Links</th>
+        <th style="width: 40%;">Strategic Reason for Forking & Blueprint Purpose</th>
+    </tr>
+    <tr>
+        <td><strong>Tungsten Execution Core</strong><br><span class="badge">Docker Core</span></td>
+        <td><a class="repo-link" href="https://github.com/moby/moby">moby/moby</a></td>
+        <td>The runtime foundation for Tungsten's drag-and-drop builder canvas. Allows Tungsten to instantly spin up, build, and preview sandboxed applications inside isolated environments without threatening the host system.</td>
+    </tr>
+    <tr>
+        <td><strong>Tungsten AI Brain</strong><br><span class="badge">Ollama</span></td>
+        <td><a class="repo-link" href="https://github.com/ollama/ollama">ollama/ollama</a></td>
+        <td>Orchestrates local generative AI compilation. Embedded into Tungsten to drive text-to-UI component rendering, code generation, and automated canvas debugging without paying recurring API fees to third parties.</td>
+    </tr>
+    <tr>
+        <td><strong>Tungsten Canvas Logic</strong><br><span class="badge">Litegraph.js</span></td>
+        <td><a class="repo-link" href="https://github.com/jagenjo/litegraph.js">jagenjo/litegraph.js</a></td>
+        <td>Powers the physical visual engine for Tungsten's visual programming node graphs, enabling complex drag-and-drop structural wiring between interface components and backend models.</td>
+    </tr>
+    <tr>
+        <td><strong>Vortex Database Engine</strong><br><span class="badge">PostgreSQL</span></td>
+        <td><a class="repo-link" href="https://github.com/postgres/postgres">postgres/postgres</a></td>
+        <td>The foundational relational database architecture for Vortex (Backend-as-a-Service). Handles relational data storage, querying, and structural tables smoothly at absolute enterprise scales. It is also the underlying engine required by Workspace and Connect.</td>
+    </tr>
+    <tr>
+        <td><strong>Vortex Traffic Routing</strong><br><span class="badge">Caddy Server</span></td>
+        <td><a class="repo-link" href="https://github.com/caddyserver/caddy">caddyserver/caddy</a></td>
+        <td>Acts as the reverse proxy traffic cop for Vortex. Automates security encryption certificates (SSL/HTTPS) on the fly, allowing apps generated by Tungsten to immediately launch safely to live custom domains.</td>
+    </tr>
+</table>
+
+<h2>3. Proprietary N.O Group Pillars (Private Repositories)</h2>
+<ul>
+    <li><strong>Tungsten (Active Development):</strong> Visual drag-and-drop AI layout editor, code writer, and interactive software creator canvas.</li>
+    <li><strong>Vortex (Active Development):</strong> In-house Backend-as-a-Service (BaaS) handling authentication routing, database execution, container pipelines, and custom runtime parameters, paired natively with its own integrated SDK.</li>
+</ul>
+
+<div class="footer">
+    N.O Group Master Tech Stack Blueprint &bull; Digital Sovereignty Manifest &bull; 2026 Archive
+</div>
+
+</body>
+</html>
