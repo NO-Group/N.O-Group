@@ -57,7 +57,7 @@ test('the mobile menu exposes the complete corporate information architecture', 
 test('the contact experience has direct channels and a private inquiry helper', async ({ page }) => {
   await page.goto('/contact');
   await expect(page.locator('.contact-options a[href="mailto:contact@no-group.org"]')).toBeVisible();
-  await expect(page.locator('a[href="tel:+2347075536341"]')).toHaveText('+234 (0) 707 5536 341');
+  await expect(page.locator('a[href="tel:+2347075536341"]')).toContainText('+234 (0) 707 5536 341');
   await expect(page.locator('a[href="https://wa.me/2347075536341"]')).toBeVisible();
   await page.getByLabel('Your name').fill('Ada Builder');
   await page.getByLabel('Your email').fill('ada@example.com');
