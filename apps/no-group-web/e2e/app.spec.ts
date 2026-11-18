@@ -50,7 +50,7 @@ test('the mobile menu exposes the complete corporate information architecture', 
 
 test('the contact experience has direct channels and a private inquiry helper', async ({ page }) => {
   await page.goto('/contact');
-  await expect(page.getByRole('link', { name: /contact@no-group\.org/ })).toHaveAttribute('href', 'mailto:contact@no-group.org');
+  await expect(page.locator('.contact-options a[href="mailto:contact@no-group.org"]')).toBeVisible();
   await expect(page.locator('a[href="tel:+2347075536341"]')).toHaveText('+234 (0) 707 5536 341');
   await expect(page.locator('a[href="https://wa.me/2347075536341"]')).toBeVisible();
   await page.getByLabel('Your name').fill('Ada Builder');
@@ -79,9 +79,9 @@ test('product and social destinations use the supplied URLs', async ({ page }) =
   await expect(page.locator('a[href="https://tether.no-group.org"]')).toBeVisible();
   await expect(page.locator('a[href="https://mtekfiresafetyltd.com"]')).toBeVisible();
   await page.goto('/contact');
-  await expect(page.getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/NO-Group');
-  await expect(page.getByRole('link', { name: /Discord/ })).toHaveAttribute('href', 'https://discord.gg/3q2VQq9DAh');
-  await expect(page.getByRole('link', { name: /Bluesky/ })).toHaveAttribute('href', 'https://bsky.app/profile/no-group.bsky.social');
+  await expect(page.locator('.social-links a[href="https://github.com/NO-Group"]')).toBeVisible();
+  await expect(page.locator('.social-links a[href="https://discord.gg/3q2VQq9DAh"]')).toBeVisible();
+  await expect(page.locator('.social-links a[href="https://bsky.app/profile/no-group.bsky.social"]')).toBeVisible();
 });
 
 test('sitemap and robots instructions describe every public route', async ({ request }) => {
