@@ -92,7 +92,7 @@ function Icon({ name, size = 20, stroke = 1.7 }: { name: IconName; size?: number
 }
 
 function Mark() {
-  return <span className="mark" aria-hidden="true"><span/><i/></span>;
+  return <span className="mark" aria-hidden="true"><img src="/nogroup-logo.png" alt=""/></span>;
 }
 
 function Button({ children, href, onClick, variant = 'primary', className = '', external = false }: { children: ReactNode; href?: string; onClick?: () => void; variant?: 'primary' | 'secondary' | 'text'; className?: string; external?: boolean }) {
