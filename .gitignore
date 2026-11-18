@@ -2,13 +2,7 @@ node_modules/
 dist/
 .env
 .env.*
-!.env.example
 *.log
 *.tsbuildinfo
-.dev.vars
-.dev.vars.*
-.wrangler/
-.pages-functions/
-.data/
 playwright-report/
 test-results/
