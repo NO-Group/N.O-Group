@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 
-type Route = '/' | '/ecosystem' | '/infrastructure' | '/intelligence' | '/ventures' | '/company' | '/contact';
+type Route = '/' | '/ecosystem' | '/infrastructure' | '/intelligence' | '/ventures' | '/company' | '/contact' | '/privacy' | '/terms' | '/cookies';
 type IconName = 'arrow' | 'arrow-up' | 'menu' | 'close' | 'sun' | 'moon' | 'spark' | 'layers' | 'code' | 'cloud' | 'brain' | 'book' | 'message' | 'browser' | 'tool' | 'shield' | 'globe' | 'github' | 'discord' | 'bluesky' | 'check' | 'plus' | 'mail' | 'phone' | 'location' | 'external' | 'quote' | 'network';
 
 type Product = {
@@ -12,7 +12,7 @@ type Product = {
   status?: string;
 };
 
-const internalRoutes: Route[] = ['/', '/ecosystem', '/infrastructure', '/intelligence', '/ventures', '/company', '/contact'];
+const internalRoutes: Route[] = ['/', '/ecosystem', '/infrastructure', '/intelligence', '/ventures', '/company', '/contact', '/privacy', '/terms', '/cookies'];
 const navItems: Array<{ label: string; route: Route }> = [
   { label: 'Ecosystem', route: '/ecosystem' },
   { label: 'Capabilities', route: '/infrastructure' },
@@ -243,12 +243,80 @@ function ContactPage() {
   </>;
 }
 
+type LegalKind = 'privacy' | 'terms' | 'cookies';
+
+type LegalDocument = {
+  eyebrow: string;
+  heroPrimary: string;
+  heroAccent: string;
+  description: string;
+  intro: string;
+  sections: Array<{ heading: string; paragraphs: string[]; bullets?: string[] }>;
+};
+
+const legalDocuments: Record<LegalKind, LegalDocument> = {
+  privacy: {
+    eyebrow: 'Privacy policy',
+    heroPrimary: 'Your privacy',
+    heroAccent: 'matters here.',
+    description: 'How N.O Group handles the limited information connected to this public website.',
+    intro: 'N.O Group respects your privacy. This policy explains what happens when you visit n.o-group.org, contact us, or follow links to one of our products.',
+    sections: [
+      { heading: 'What this policy covers', paragraphs: ['This policy applies to the N.O Group public corporate website at n.o-group.org. Individual N.O Group products and external websites may have their own privacy information and controls.'] },
+      { heading: 'Information you choose to share', paragraphs: ['You can browse this site without creating an account or submitting a form to our servers. If you choose to contact us by email, phone, WhatsApp, or another direct channel, we receive the information you include in that communication and use it to respond to your request.'] },
+      { heading: 'Website storage and technical information', paragraphs: ['The site saves your light or dark theme preference in your browser local storage under the key no-group-theme. This preference stays on your device and is not used to identify or track you.', 'Like most websites, our hosting provider may process limited technical connection information needed to deliver and protect the site, such as IP address, browser information, request time, and security events.'] },
+      { heading: 'How we use information', paragraphs: ['We use information you voluntarily share to reply to you, evaluate a potential partnership or service request, provide support, protect the website, and meet applicable obligations. We do not sell personal information or use it for advertising profiling.'] },
+      { heading: 'External links', paragraphs: ['This website links to N.O Group products, social platforms, GitHub, Discord, Bluesky, WhatsApp, and other third-party websites. Their privacy practices apply once you leave this site. Please review their policies before providing them with information.'] },
+      { heading: 'Your choices and contact', paragraphs: ['You may clear the site preference from your browser storage at any time. To ask about information you have shared directly with N.O Group, contact us at contact@no-group.org. We may update this policy as the site or our services evolve.'] },
+    ],
+  },
+  terms: {
+    eyebrow: 'Terms of use',
+    heroPrimary: 'Use with care.',
+    heroAccent: 'Build with purpose.',
+    description: 'The terms that govern access to and use of the N.O Group public website.',
+    intro: 'By accessing n.o-group.org, you agree to use this website lawfully and in line with these Terms of Use. If you do not agree, please do not use the site.',
+    sections: [
+      { heading: 'Purpose of this website', paragraphs: ['This website presents N.O Group, its operating philosophy, ventures, contact routes, and publicly available information. It is provided for general information, discovery, and legitimate business or community communication.'] },
+      { heading: 'Acceptable use', paragraphs: ['You may use the site for lawful, personal, research, and business purposes. You must not interfere with the site, attempt unauthorised access, introduce malicious code, misuse our brand or content, or use automated activity that harms availability for others.'] },
+      { heading: 'Intellectual property', paragraphs: ['The N.O Group name, logo, site design, written content, graphics, and other original material are owned by or used with permission by N.O Group. You may not reproduce, modify, distribute, or use them commercially without prior written permission, except where law allows.'] },
+      { heading: 'Product and third-party links', paragraphs: ['Links to ventures, open-source projects, social services, and third-party websites are provided for convenience. Their availability, content, policies, and services are outside the control of this corporate website.'] },
+      { heading: 'No guarantee of uninterrupted availability', paragraphs: ['We work to keep the site accurate, secure, and available, but it is provided on an as-available basis. Content, links, product availability, and site features may change without notice.'] },
+      { heading: 'Changes and questions', paragraphs: ['We may update these Terms of Use when the website or our operations change. Continued use after an update means you accept the revised terms. For questions or permission requests, email contact@no-group.org.'] },
+    ],
+  },
+  cookies: {
+    eyebrow: 'Cookie and analytics notice',
+    heroPrimary: 'No tracking',
+    heroAccent: 'by default.',
+    description: 'A clear explanation of the limited browser storage and analytics position on this website.',
+    intro: 'N.O Group keeps this public website intentionally lightweight. We do not currently use advertising, marketing, or cross-site tracking cookies on n.o-group.org.',
+    sections: [
+      { heading: 'Cookies and analytics today', paragraphs: ['This website does not currently load a third-party analytics service, advertising pixel, or tracking cookie. No cookie consent banner is required for the site’s present functionality because we do not set non-essential cookies.'] },
+      { heading: 'Theme preference storage', paragraphs: ['When you choose a light or dark theme, the site stores that preference locally in your browser using local storage. The value is no-group-theme and contains only your chosen appearance setting. It is not sent to N.O Group as an analytics identifier.'] },
+      { heading: 'Hosting and security logs', paragraphs: ['Our hosting provider may process necessary technical request data to operate, secure, and diagnose the website. This is separate from advertising or behavioural analytics.'] },
+      { heading: 'Third-party destinations', paragraphs: ['Following an external link can take you to a service that uses its own cookies, analytics, and privacy controls. This includes social platforms, product sites, email, WhatsApp, and other linked services.'] },
+      { heading: 'Your controls', paragraphs: ['You can clear local storage through your browser settings, which removes your saved theme choice. You can also use private browsing or browser privacy controls when visiting the website.'] },
+      { heading: 'Future changes', paragraphs: ['If N.O Group adds non-essential analytics or cookies in the future, this notice will be updated before or at the time of that change, along with any appropriate choice mechanism.'] },
+    ],
+  },
+};
+
+function LegalPage({ kind, navigate }: { kind: LegalKind; navigate: (route: Route) => void }) {
+  const document = legalDocuments[kind];
+  return <>
+    <PageHero eyebrow={document.eyebrow} title={<>{document.heroPrimary}<br/><em>{document.heroAccent}</em></>} copy={document.description} art="grid"/>
+    <article className="legal-document section-pad"><aside className="legal-aside"><PageLabel>Last updated</PageLabel><p>18 November 2026</p><Icon name="shield" size={25}/><span>Questions about this notice?</span><a href="mailto:contact@no-group.org">contact@no-group.org</a></aside><div className="legal-content"><p className="legal-lede">{document.intro}</p>{document.sections.map((section, index) => <section className="legal-section" key={section.heading}><span>0{index + 1}</span><div><h2>{section.heading}</h2>{section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}{section.bullets && <ul>{section.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}</ul>}</div></section>)}</div></article>
+    <section className="slim-cta legal-cta"><div><p>Need to reach the team directly?</p><h2>Let’s keep the<br/><em>conversation clear.</em></h2></div><Button onClick={() => navigate('/contact')}>Contact N.O Group <Icon name="arrow" size={18}/></Button></section>
+  </>;
+}
+
 function PageHero({ eyebrow, title, copy, art }: { eyebrow: string; title: ReactNode; copy: string; art: 'constellation' | 'grid' | 'pulse' | 'ripple' | 'monogram' | 'contact' }) {
   return <section className={`page-hero page-hero-${art}`}><div className="page-hero-copy"><PageLabel>{eyebrow}</PageLabel><h1>{title}</h1><p>{copy}</p></div><div className="page-hero-art" aria-hidden="true"><div className="art-shape art-shape-one"/><div className="art-shape art-shape-two"/><div className="art-shape art-shape-three"/>{art === 'monogram' && <span className="art-monogram">N.O</span>}{art === 'contact' && <Icon name="mail" size={54}/>}</div></section>;
 }
 
 function SiteFooter({ navigate }: { navigate: (route: Route) => void }) {
-  return <footer className="site-footer"><div className="footer-top"><div className="footer-brand"><a href="/" onClick={(event) => { event.preventDefault(); navigate('/'); }} className="brand"><Mark/><span>N.O <b>GROUP</b></span></a><p>Independent thinking.<br/>Infinite possibilities.</p></div>{footerGroups.map((group) => <div className="footer-links" key={group.title}><h3>{group.title}</h3>{group.items.map((item) => item.route ? <a key={item.label} href={item.route} onClick={(event) => { event.preventDefault(); navigate(item.route!); }}>{item.label}</a> : <a key={item.label} href={item.url} target={item.url?.startsWith('http') ? '_blank' : undefined} rel={item.url?.startsWith('http') ? 'noreferrer' : undefined}>{item.label}{item.url?.startsWith('http') && <Icon name="external" size={12}/>}</a>)}</div>)}</div><div className="footer-bottom"><span>© {new Date().getFullYear()} N.O Group. Built in Nigeria.</span><div><a href="/sitemap.xml">Sitemap</a><a href="mailto:contact@no-group.org">contact@no-group.org</a></div></div></footer>;
+  return <footer className="site-footer"><div className="footer-top"><div className="footer-brand"><a href="/" onClick={(event) => { event.preventDefault(); navigate('/'); }} className="brand"><Mark/><span>N.O <b>GROUP</b></span></a><p>Independent thinking.<br/>Infinite possibilities.</p></div>{footerGroups.map((group) => <div className="footer-links" key={group.title}><h3>{group.title}</h3>{group.items.map((item) => item.route ? <a key={item.label} href={item.route} onClick={(event) => { event.preventDefault(); navigate(item.route!); }}>{item.label}</a> : <a key={item.label} href={item.url} target={item.url?.startsWith('http') ? '_blank' : undefined} rel={item.url?.startsWith('http') ? 'noreferrer' : undefined}>{item.label}{item.url?.startsWith('http') && <Icon name="external" size={12}/>}</a>)}</div>)}</div><div className="footer-bottom"><span>© {new Date().getFullYear()} N.O Group. Built in Nigeria.</span><div className="footer-meta"><a href="/privacy" onClick={(event) => { event.preventDefault(); navigate('/privacy'); }}>Privacy</a><a href="/terms" onClick={(event) => { event.preventDefault(); navigate('/terms'); }}>Terms</a><a href="/cookies" onClick={(event) => { event.preventDefault(); navigate('/cookies'); }}>Cookies</a><a href="/sitemap.xml">Sitemap</a><a href="mailto:contact@no-group.org">contact@no-group.org</a></div></div></footer>;
 }
 
 export default function App() {
@@ -259,7 +327,7 @@ export default function App() {
 
   useEffect(() => { const syncRoute = () => setRoute(getRoute(window.location.pathname)); window.addEventListener('popstate', syncRoute); return () => window.removeEventListener('popstate', syncRoute); }, []);
   useEffect(() => { document.documentElement.dataset.theme = theme; document.documentElement.style.colorScheme = theme; window.localStorage.setItem('no-group-theme', theme); }, [theme]);
-  useEffect(() => { const titles: Record<Route, string> = { '/': 'N.O Group — A new perspective starts here', '/ecosystem': 'Ecosystem — N.O Group', '/infrastructure': 'Infrastructure — N.O Group', '/intelligence': 'Jeris AI — N.O Group', '/ventures': 'Ventures — N.O Group', '/company': 'Company — N.O Group', '/contact': 'Contact — N.O Group' }; document.title = titles[route]; }, [route]);
+  useEffect(() => { const titles: Record<Route, string> = { '/': 'N.O Group — A new perspective starts here', '/ecosystem': 'Ecosystem — N.O Group', '/infrastructure': 'Infrastructure — N.O Group', '/intelligence': 'Jeris AI — N.O Group', '/ventures': 'Ventures — N.O Group', '/company': 'Company — N.O Group', '/contact': 'Contact — N.O Group', '/privacy': 'Privacy Policy — N.O Group', '/terms': 'Terms of Use — N.O Group', '/cookies': 'Cookie and Analytics Notice — N.O Group' }; document.title = titles[route]; }, [route]);
 
   let page: ReactNode;
   if (route === '/ecosystem') page = <EcosystemPage navigate={navigate}/>;
@@ -268,6 +336,9 @@ export default function App() {
   else if (route === '/ventures') page = <VenturesPage navigate={navigate}/>;
   else if (route === '/company') page = <CompanyPage navigate={navigate}/>;
   else if (route === '/contact') page = <ContactPage/>;
+  else if (route === '/privacy') page = <LegalPage kind="privacy" navigate={navigate}/>;
+  else if (route === '/terms') page = <LegalPage kind="terms" navigate={navigate}/>;
+  else if (route === '/cookies') page = <LegalPage kind="cookies" navigate={navigate}/>;
   else page = <HomePage navigate={navigate}/>;
 
   return <div className="site-shell"><a className="skip-link" href="#main-content">Skip to content</a><SiteHeader route={route} navigate={navigate} theme={theme} toggleTheme={toggleTheme}/><main id="main-content">{page}</main><SiteFooter navigate={navigate}/></div>;

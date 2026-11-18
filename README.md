@@ -15,6 +15,9 @@ The public site presents the group’s infrastructure, artificial-intelligence, 
 | `/ventures` | Publishing, consumer, and browser utility ventures |
 | `/company` | Founder story and operating philosophy |
 | `/contact` | Partnership, client, developer, and press contact paths |
+| `/privacy` | Privacy Policy |
+| `/terms` | Terms of Use |
+| `/cookies` | Cookie and analytics notice |
 
 The homepage and every page are responsive, keyboard-accessible, respect reduced-motion preferences, and support persistent light/dark theme switching. All interface and social icons are inline SVGs; no emoji icons are used.
 

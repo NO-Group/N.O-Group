@@ -17,6 +17,9 @@ test('each flagship route works directly and updates its document title', async 
     ['/ventures', /Ventures — N\.O Group/],
     ['/company', /Company — N\.O Group/],
     ['/contact', /Contact — N\.O Group/],
+    ['/privacy', /Privacy Policy — N\.O Group/],
+    ['/terms', /Terms of Use — N\.O Group/],
+    ['/cookies', /Cookie and Analytics Notice — N\.O Group/],
   ] as const;
   for (const [path, title] of pages) {
     await page.goto(path);
@@ -85,7 +88,7 @@ test('sitemap and robots instructions describe every public route', async ({ req
   const sitemap = await request.get('/sitemap.xml');
   expect(sitemap.ok()).toBeTruthy();
   const xml = await sitemap.text();
-  for (const route of ['/', '/ecosystem', '/infrastructure', '/intelligence', '/ventures', '/company', '/contact']) {
+  for (const route of ['/', '/ecosystem', '/infrastructure', '/intelligence', '/ventures', '/company', '/contact', '/privacy', '/terms', '/cookies']) {
     expect(xml).toContain(`https://n.o-group.org${route}`);
   }
   const robots = await request.get('/robots.txt');
