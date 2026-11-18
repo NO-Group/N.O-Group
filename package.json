@@ -6,17 +6,10 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "concurrently -k -n web,crawler \"npm run dev --workspace @no-group/web\" \"npm run dev:api --workspace @no-group/web\"",
+    "dev": "npm run dev --workspace @no-group/web",
     "build": "npm run build --workspace @no-group/web",
     "typecheck": "npm run typecheck --workspace @no-group/web",
-    "test": "npm run test --workspace @no-group/web",
-    "dev:web": "npm run dev --workspace @no-group/web",
-    "start:api": "npm run start:api --workspace @no-group/web",
-    "test:e2e": "npm run test:e2e --workspace @no-group/web",
-    "security:audit": "node scripts/security-audit.mjs"
-  },
-  "devDependencies": {
-    "concurrently": "^9.2.5"
+    "test": "npm run test --workspace @no-group/web"
   },
   "engines": {
     "node": ">=22.16.0"

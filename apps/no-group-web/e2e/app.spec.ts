@@ -1,107 +1,101 @@
 import { test, expect } from '@playwright/test';
-const response = {results:[{title:'Flutter glassmorphism',url:'https://example.com/',description:'A safe native result'}],demo:false,cacheAllowed:true};
-test('search caches repeat queries and Back navigation',async({page})=>{
-  let calls=0;await page.route('**/api/search',async route=>{calls++;await route.fulfill({json:response});});
+
+test('the flagship homepage introduces the group and routes through the ecosystem', async ({ page }) => {
   await page.goto('/');
-  const field=page.getByLabel('Search the web',{exact:true});
-  await field.fill('Flutter glassmorphism');await field.press('Enter');await expect(page.getByText('A safe native result')).toBeVisible();
-  await field.press('Enter');await expect(page.getByText('1 web results · From session cache')).toBeVisible();expect(calls).toBe(1);
-  await field.fill('another query');await field.press('Enter');await expect(page).toHaveURL(/q=another/);await page.goBack();await expect(field).toHaveValue('Flutter glassmorphism');await expect(page.getByText('From session cache',{exact:false})).toBeVisible();expect(calls).toBe(2);
+  await expect(page.getByRole('heading', { name: /A new perspective starts here/i })).toBeVisible();
+  await expect(page.getByText('Independent technology group', { exact: false })).toBeVisible();
+  await page.getByRole('link', { name: 'Ecosystem', exact: true }).click();
+  await expect(page).toHaveURL(/\/ecosystem$/);
+  await expect(page.getByRole('heading', { name: /A connected portfolio/i })).toBeVisible();
+  await expect(page.locator('a.product-card').filter({ hasText: 'Vortex' })).toHaveAttribute('href', 'https://vortex.no-group.org');
 });
-test('auto search debounces typing and manual Enter does not duplicate',async({page})=>{
-  let calls=0;await page.route('**/api/search',async route=>{calls++;await route.fulfill({json:response});});await page.goto('/');await page.getByRole('checkbox',{name:/Search as you type/}).check();const field=page.getByLabel('Search the web',{exact:true});await field.pressSequentially('flutter',{delay:40});await expect.poll(()=>calls).toBe(1);await field.press('Enter');await page.waitForTimeout(500);expect(calls).toBe(1);
+
+test('each flagship route works directly and updates its document title', async ({ page }) => {
+  const pages = [
+    ['/infrastructure', /Infrastructure — N\.O Group/],
+    ['/intelligence', /Jeris AI — N\.O Group/],
+    ['/ventures', /Ventures — N\.O Group/],
+    ['/company', /Company — N\.O Group/],
+    ['/contact', /Contact — N\.O Group/],
+  ] as const;
+  for (const [path, title] of pages) {
+    await page.goto(path);
+    await expect(page).toHaveTitle(title);
+    await expect(page.locator('main h1')).toBeVisible();
+  }
 });
-test('429 is styled and never automatically retries',async({page})=>{
-  let calls=0;await page.route('**/api/search',async route=>{calls++;await route.fulfill({status:429,headers:{'Retry-After':'2'},json:{error:'Rate limited'}});});await page.goto('/');const field=page.getByLabel('Search the web',{exact:true});await field.fill('cloud');await field.press('Enter');await expect(page.getByText('A little pause. Then keep exploring.')).toBeVisible();await expect(page.getByRole('button',{name:/Try again in/})).toBeDisabled();await expect(page.getByRole('button',{name:'Retry search ↗'})).toBeEnabled({timeout:5000});expect(calls).toBe(1);
+
+test('the theme control switches palettes and remembers the selected theme', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await page.getByRole('button', { name: 'Switch to light theme' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  await expect(page.getByRole('button', { name: 'Switch to dark theme' })).toBeVisible();
 });
-test('JSON and Unicode tools work, notes persist',async({page})=>{
-  await page.goto('/');await page.getByRole('button',{name:'Format JSON',exact:true}).click();await expect(page.getByLabel('JSON input')).toHaveValue(/\n/);await page.getByRole('button',{name:/Base64 codec/}).click();await page.getByLabel('Text to convert').fill('Àbújá 🌍');await page.getByRole('button',{name:'Encode',exact:true}).click();await page.getByRole('button',{name:'Decode',exact:true}).click();await expect(page.getByLabel('Text to convert')).toHaveValue('Àbújá 🌍');await page.getByRole('button',{name:/Scratchpad/}).click();await page.getByLabel('Your private scratchpad').fill('Remember the idea');await page.reload();await page.getByRole('button',{name:/Scratchpad/}).click();await expect(page.getByLabel('Your private scratchpad')).toHaveValue('Remember the idea');
+
+test('the mobile menu exposes the complete corporate information architecture', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Open menu' }).click();
+  await expect(page.getByRole('navigation', { name: 'Mobile navigation' })).toBeVisible();
+  await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', { name: 'Intelligence' }).click();
+  await expect(page).toHaveURL(/\/intelligence$/);
+  await expect(page.getByRole('heading', { name: /Intelligence with room to think/i })).toBeVisible();
 });
-test('barcode generation offers an SVG download',async({page})=>{
-  await page.goto('/');await page.getByRole('button',{name:'Generate ↗',exact:true}).click();await expect(page.getByAltText('Generated SVG preview')).toBeVisible();const event=page.waitForEvent('download');await page.getByRole('button',{name:'Download SVG ↓',exact:true}).click();expect((await event).suggestedFilename()).toBe('no-group-barcode.svg');
+
+test('the contact experience has direct channels and a private inquiry helper', async ({ page }) => {
+  await page.goto('/contact');
+  await expect(page.getByRole('link', { name: /contact@no-group\.org/ })).toHaveAttribute('href', 'mailto:contact@no-group.org');
+  await expect(page.locator('a[href="tel:+2347075536341"]')).toHaveText('+234 (0) 707 5536 341');
+  await expect(page.locator('a[href="https://wa.me/2347075536341"]')).toBeVisible();
+  await page.getByLabel('Your name').fill('Ada Builder');
+  await page.getByLabel('Your email').fill('ada@example.com');
+  await page.getByLabel('I am reaching out as').selectOption({ label: 'Developer or builder' });
+  await page.getByLabel('Tell us a little about it').fill('I would like to explore a practical partnership.');
+  await page.getByRole('button', { name: 'Prepare my inquiry' }).click();
+  await expect(page.getByText('Your message is ready to send', { exact: false })).toBeVisible();
 });
-test('image conversion creates downloadable vector SVG',async({page})=>{
-  await page.goto('/');await page.getByRole('button',{name:/Image → SVG/}).click();await page.locator('input[type=file]').setInputFiles({name:'pixel.png',mimeType:'image/png',buffer:Buffer.from(await page.evaluate(()=>{ const c=document.createElement('canvas'); c.width=2;c.height=2;const ctx=c.getContext('2d')!;ctx.fillStyle='#0c2238';ctx.fillRect(0,0,2,2);return c.toDataURL('image/png').split(',')[1]!; }),'base64')});await expect(page.getByRole('button',{name:'Download vector SVG ↓'})).toBeVisible();await expect(page.getByText('Converted locally.',{exact:false})).toBeVisible();
+
+test('product and social destinations use the supplied URLs', async ({ page }) => {
+  await page.goto('/ecosystem');
+  const destinations = [
+    ['Vortex', 'https://vortex.no-group.org'],
+    ['Tungsten', 'https://tungsten.no-group.org'],
+    ['Jeris', 'https://jeris.no-group.org'],
+    ['Link', 'https://link.no-group.org'],
+    ['KwikChat', 'https://kwikchat.no-group.org'],
+    ['ToolsKit', 'https://toolskit.no-group.org'],
+  ] as const;
+  for (const [name, url] of destinations) {
+    await expect(page.locator('a.product-card').filter({ hasText: name }).first()).toHaveAttribute('href', url);
+  }
+  await page.goto('/infrastructure');
+  await expect(page.locator('a[href="https://graphene.no-group.org"]')).toBeVisible();
+  await expect(page.locator('a[href="https://tether.no-group.org"]')).toBeVisible();
+  await expect(page.locator('a[href="https://mtekfiresafetyltd.com"]')).toBeVisible();
+  await page.goto('/contact');
+  await expect(page.getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/NO-Group');
+  await expect(page.getByRole('link', { name: /Discord/ })).toHaveAttribute('href', 'https://discord.gg/3q2VQq9DAh');
+  await expect(page.getByRole('link', { name: /Bluesky/ })).toHaveAttribute('href', 'https://bsky.app/profile/no-group.bsky.social');
 });
-test('crawler renders native results and exports JSON',async({page})=>{
-  await page.route('**/api/crawl',route=>route.fulfill({json:{pages:[{url:'https://example.com/',title:'Example Site',description:'Test crawl',links:['https://example.com/about']}]}}));await page.goto('/');await page.getByRole('button',{name:/Web crawler/}).click();await page.getByLabel('Starting URL').fill('https://example.com/');await page.getByRole('button',{name:'Start crawl ↗'}).click();await expect(page.getByRole('link',{name:'Example Site ↗'})).toBeVisible();await expect(page.getByRole('button',{name:'Export JSON ↓'})).toBeVisible();
+
+test('sitemap and robots instructions describe every public route', async ({ request }) => {
+  const sitemap = await request.get('/sitemap.xml');
+  expect(sitemap.ok()).toBeTruthy();
+  const xml = await sitemap.text();
+  for (const route of ['/', '/ecosystem', '/infrastructure', '/intelligence', '/ventures', '/company', '/contact']) {
+    expect(xml).toContain(`https://n.o-group.org${route}`);
+  }
+  const robots = await request.get('/robots.txt');
+  expect(robots.ok()).toBeTruthy();
+  expect(await robots.text()).toMatch(/Sitemap: https:\/\/n\.o-group\.org\/sitemap\.xml/);
 });
-test('layout does not overflow and keyboard search shortcut works',async({page})=>{
-  await page.goto('/');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.keyboard.press('Control+k');await expect(page.getByLabel('Search the web',{exact:true})).toBeFocused();
-});
-test('QR output decodes back to its Unicode payload',async({page})=>{
-  const {default:jsQR}=await import('jsqr');await page.goto('/');await page.getByLabel('Link or text').fill('https://no-group.org/?city=Àbújá🌍');await page.getByRole('button',{name:'Generate ↗',exact:true}).click();const image=page.getByAltText('Generated SVG preview');await expect(image).toBeVisible();
-  const pixels=await image.evaluate(async(el:HTMLImageElement)=>{await el.decode();const c=document.createElement('canvas');c.width=el.naturalWidth;c.height=el.naturalHeight;const ctx=c.getContext('2d')!;ctx.drawImage(el,0,0);return {data:Array.from(ctx.getImageData(0,0,c.width,c.height).data),width:c.width,height:c.height};});
-  expect(jsQR(new Uint8ClampedArray(pixels.data),pixels.width,pixels.height)?.data).toBe('https://no-group.org/?city=Àbújá🌍');
-});
-test('homepage passes automated accessibility checks',async({page})=>{
-  const {default:AxeBuilder}=await import('@axe-core/playwright');await page.goto('/');const scan=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();expect(scan.violations).toEqual([]);
-});
-test('Code 128 output decodes to its original text',async({page})=>{
-  const {Code128Reader,BinaryBitmap,HybridBinarizer,RGBLuminanceSource}=await import('@zxing/library');
-  await page.goto('/');await page.getByLabel('Link or text').fill('NO-GROUP-123');await page.getByRole('combobox',{name:'Barcode format'}).selectOption('code128');await page.getByRole('button',{name:'Generate ↗',exact:true}).click();const image=page.getByAltText('Generated SVG preview');await expect(image).toBeVisible();
-  const pixels=await image.evaluate(async(el:HTMLImageElement)=>{await el.decode();const c=document.createElement('canvas');c.width=el.naturalWidth;c.height=el.naturalHeight;const ctx=c.getContext('2d')!;ctx.drawImage(el,0,0);const data=ctx.getImageData(0,0,c.width,c.height).data;const gray=[];for(let i=0;i<data.length;i+=4)gray.push(Math.round((data[i]!+2*data[i+1]!+data[i+2]!)/4));return {gray,width:c.width,height:c.height};});
-  const bitmap=new BinaryBitmap(new HybridBinarizer(new RGBLuminanceSource(new Uint8ClampedArray(pixels.gray),pixels.width,pixels.height)));
-  expect(new Code128Reader().decode(bitmap).getText()).toBe('NO-GROUP-123');
-});
-test('company contact links use the supplied destinations',async({page})=>{
-  await page.goto('/');await page.getByRole('link',{name:'Let’s talk',exact:true}).click();await expect(page).toHaveURL(/#contact$/);await expect(page.getByRole('heading',{name:'Start a conversation.'})).toBeVisible();
-  await expect(page.getByRole('link',{name:'Chat on WhatsApp',exact:true})).toHaveAttribute('href','https://wa.me/2347075536341');
-  await expect(page.getByRole('link',{name:/CALL US/})).toHaveAttribute('href','tel:+2347075536341');
-  await expect(page.getByRole('link',{name:/n.ogroup@yahoo.com/})).toHaveAttribute('href','mailto:n.ogroup@yahoo.com');
-  await expect(page.getByRole('link',{name:/n.o-group@outlook.com/})).toHaveAttribute('href','mailto:n.o-group@outlook.com');
-});
-test('rich results render safely, paginate, filter, and restore through Back',async({page})=>{
-  const calls:{q:string;page:number;country:string;freshness:string;safeSearch:string}[]=[];
-  await page.route('**/api/search',async route=>{
-    const body=route.request().postDataJSON();calls.push(body);await route.fulfill({json:{results:[{title:'<strong>Flutter</strong> &amp; cloud',url:'https://example.com/docs',description:'Flutter apps &amp; native storage',siteName:'Example Docs',age:'2 days ago',image:'https://imgs.search.brave.com/signed/preview.png',snippets:['A second useful snippet.'],sitelinks:[{title:'Guides',url:'https://example.com/guides'}]}],demo:false,cacheAllowed:true,page:body.page,hasMore:body.page===0}});
-  });
-  let previews=0;await page.route('**/api/thumbnail?*',async route=>{previews++;await route.fulfill({status:404});});
-  await page.goto('/');const field=page.getByLabel('Search the web',{exact:true});await field.fill('Flutter');await field.press('Enter');await expect(page.getByRole('link',{name:'Flutter & cloud',exact:true})).toBeVisible();await expect(page.getByRole('link',{name:'Guides'})).toBeVisible();expect(previews).toBe(0);
-  await page.getByRole('button',{name:'More detail +'}).click();await expect(page.getByText('A second useful snippet.')).toBeVisible();await page.getByRole('checkbox',{name:'Page previews'}).check();await expect.poll(()=>previews).toBe(1);
-  await page.getByRole('button',{name:'Next page →'}).click();await expect(page).toHaveURL(/page=1/);await expect(page.getByRole('navigation',{name:'Results pages'})).toContainText('Page 2');expect(calls[1]!.page).toBe(1);
-  await page.goBack();await expect(page.getByRole('navigation',{name:'Results pages'})).toContainText('Page 1');await expect(page.getByText('From session cache',{exact:false})).toBeVisible();expect(calls).toHaveLength(2);
-  await page.getByLabel('Updated',{exact:false}).selectOption('pw');await page.getByLabel('Region',{exact:false}).selectOption('NG');await page.getByLabel('SafeSearch',{exact:false}).selectOption('strict');expect(calls).toHaveLength(2);await page.getByRole('button',{name:'Apply filters'}).click();await expect.poll(()=>calls.length).toBe(3);expect(calls[2]).toMatchObject({country:'NG',freshness:'pw',safeSearch:'strict',page:0});
-});
-test('empty searches render useful recovery controls and no false pagination',async({page})=>{
-  await page.route('**/api/search',route=>route.fulfill({json:{results:[],demo:false,hasMore:false,cacheAllowed:false}}));await page.goto('/');const field=page.getByLabel('Search the web',{exact:true});await field.fill('noresults');await field.press('Enter');await expect(page.getByRole('heading',{name:'No results this time.'})).toBeVisible();await expect(page.getByRole('navigation',{name:'Results pages'})).toHaveCount(0);await page.getByRole('button',{name:'Refine your search ↑'}).click();await expect(field).toBeFocused();
-});
-test('result view passes accessibility and fits mobile width',async({page})=>{
-  const {default:AxeBuilder}=await import('@axe-core/playwright');await page.route('**/api/search',route=>route.fulfill({json:{...response,hasMore:true}}));await page.goto('/?q=flutter');await expect(page.getByText('A safe native result')).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);const scan=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();expect(scan.violations).toEqual([]);
-});
-test('weather is on demand and unit switching needs no API calls',async({page})=>{
- let calls=0;await page.route('**/api/weather',async route=>{calls++;expect(route.request().postDataJSON()).toEqual({city:'Abuja,NG'});await route.fulfill({json:{data:{city:'Abuja',country:'NG',temperature:30,feelsLike:32,humidity:60,wind:2.5,description:'few clouds',condition:801,observedAt:Date.now()},fetchedAt:Date.now(),expiresAt:Date.now()+600000,cached:false}});});
- await page.goto('/');expect(calls).toBe(0);await page.getByRole('button',{name:'Get weather ↗'}).click();await expect(page.locator('.weather-temperature')).toContainText('30');await expect(page.getByText('few clouds',{exact:true})).toBeVisible();await page.getByRole('button',{name:'°F',exact:true}).click();await expect(page.locator('.weather-temperature')).toContainText('86');expect(calls).toBe(1);
-});
-test('sports loads by choice and handles empty snapshots honestly',async({page})=>{
- let calls=0;await page.route('**/api/sports',async route=>{calls++;const {sport}=route.request().postDataJSON();await route.fulfill({json:{data:{sport,matches:sport==='football'?[{id:'1',home:'Home FC',away:'Away FC',score:'2 - 1',status:'65',league:'Test League',date:'2026-11-07',time:'18:30'}]:[]},fetchedAt:Date.now(),expiresAt:Date.now()+60000,cached:false}});});
- await page.goto('/');expect(calls).toBe(0);await page.getByRole('button',{name:'Load scores ↗'}).click();await expect(page.getByText('Home FC',{exact:true})).toBeVisible();await expect(page.getByText('2 - 1',{exact:true})).toBeVisible();await page.getByLabel('Sport',{exact:true}).selectOption('tennis');expect(calls).toBe(1);await page.getByRole('button',{name:'Load scores ↗'}).click();await expect(page.getByText('No in-progress events were returned',{exact:false})).toBeVisible();expect(calls).toBe(2);
-});
-test('weather and sports display styled failures without crashing search',async({page})=>{
- await page.route('**/api/weather',route=>route.fulfill({status:404,json:{error:'City not found. Try a city and country code.'}}));await page.route('**/api/sports',route=>route.fulfill({status:429,json:{error:'Provider request limit reached. Please try later.'}}));await page.goto('/');await page.getByRole('button',{name:'Get weather ↗'}).click();await expect(page.getByRole('alert').filter({hasText:'City not found'})).toBeVisible();await page.getByRole('button',{name:'Load scores ↗'}).click();await expect(page.getByRole('alert').filter({hasText:'Provider request limit reached'})).toBeVisible();await expect(page.getByLabel('Search the web',{exact:true})).toBeVisible();
-});
-test('local filtering, sorting, and layouts do not spend API calls',async({page})=>{
- let calls=0;await page.route('**/api/search',async route=>{calls++;await route.fulfill({json:{results:[{title:'Cloud storage guide',url:'https://alpha.example/docs',description:'An object storage guide'},{title:'Realtime events',url:'https://beta.example/events',description:'Sync applications in realtime'}],cacheAllowed:true,demo:false}});});await page.goto('/?q=cloud');await expect(page.getByRole('link',{name:'Cloud storage guide'})).toBeVisible();await page.getByLabel('Find within loaded results').fill('realtime');await expect(page.getByRole('link',{name:'Cloud storage guide'})).toHaveCount(0);await expect(page.getByRole('link',{name:'Realtime events',exact:true})).toBeVisible();await page.getByRole('button',{name:'Clear local filters ×'}).click();await page.getByRole('combobox',{name:'Filter loaded sources'}).selectOption('alpha.example');await expect(page.getByRole('link',{name:'Realtime events',exact:true})).toHaveCount(0);await page.getByRole('combobox',{name:'Sort loaded results'}).selectOption('source');await page.getByRole('button',{name:'Grid layout',exact:true}).click();await expect(page.locator('.workspace-results')).toHaveClass(/layout-grid/);await page.getByRole('button',{name:'Compact layout',exact:true}).click();await expect(page.locator('.workspace-results')).toHaveClass(/layout-compact/);expect(calls).toBe(1);
-});
-test('saved URL references persist, accept personal notes, and export without re-searching',async({page})=>{
- let calls=0;await page.route('**/api/search',async route=>{calls++;await route.fulfill({json:response});});await page.goto('/?q=flutter');await page.getByRole('button',{name:'Save link +',exact:true}).click();await expect(page.getByRole('button',{name:'Saved link ✓',exact:true})).toBeVisible();await page.getByRole('button',{name:/^Reading list/}).click();await expect(page.getByRole('heading',{name:'Your reading list.'})).toBeVisible();await page.getByLabel('Personal label',{exact:true}).fill('My project reference');await page.getByLabel('Your note',{exact:true}).fill('Review this with the team');const download=page.waitForEvent('download');await page.getByRole('button',{name:'Export JSON ↓',exact:true}).click();expect((await download).suggestedFilename()).toBe('no-group-reading-list.json');expect(calls).toBe(1);await page.reload();await page.getByRole('button',{name:/^Reading list/}).click();await expect(page.getByLabel('Personal label',{exact:true})).toHaveValue('My project reference');await expect(page.getByLabel('Your note',{exact:true})).toHaveValue('Review this with the team');
- const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('no-group:reading-list:v1')||'[]'));expect(stored[0].url).toBe('https://example.com/');expect(stored[0].description).toBeUndefined();expect(stored[0].title).toBeUndefined();
-});
-test('command menu supports keyboard actions and focus workspace reveals tools',async({page})=>{
- let calls=0;await page.route('**/api/search',async route=>{calls++;await route.fulfill({json:response});});await page.goto('/?q=flutter');await expect(page.getByText('A safe native result')).toBeVisible();await expect(page.getByRole('heading',{name:'Your everyday toolkit.'})).toHaveCount(0);await page.keyboard.press('Control+j');await expect(page.getByRole('dialog')).toBeVisible();const command=page.getByRole('combobox',{name:'Find a command'});await command.fill('reading list');await command.press('Enter');await expect(page.getByRole('heading',{name:'Your reading list.'})).toBeVisible();await expect(page.getByRole('dialog')).not.toBeVisible();await page.getByRole('button',{name:'Open command menu',exact:true}).click();await command.fill('quick tools');await command.press('Enter');await expect(page.getByRole('heading',{name:'Your everyday toolkit.'})).toBeVisible();expect(calls).toBe(1);await page.keyboard.press('Control+j');await expect(page.getByRole('dialog')).toBeVisible();await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).not.toBeVisible();
-});
-test('query builder previews operators locally and only submits deliberately',async({page})=>{
- const calls:Record<string,unknown>[]=[];await page.route('**/api/search',async route=>{calls.push(route.request().postDataJSON());await route.fulfill({json:response});});await page.goto('/?q=cloud');await expect(page.getByText('A safe native result')).toBeVisible();await page.getByText('Fine-tune your query',{exact:false}).click();await page.getByRole('checkbox',{name:'Exact phrase',exact:true}).check();await page.getByRole('checkbox',{name:'PDF documents',exact:true}).check();await page.getByRole('textbox',{name:'Exclude phrase',exact:true}).fill('legacy');await page.getByRole('textbox',{name:'Limit to a website',exact:true}).fill('example.com');expect(calls).toHaveLength(1);await page.getByRole('button',{name:'Search this query ↗'}).click();await expect.poll(()=>calls.length).toBe(2);expect(calls[1]!.q).toBe('"cloud" filetype:pdf -"legacy" site:example.com');
-});
-test('command menu and reading list pass accessibility checks',async({page})=>{
- const {default:AxeBuilder}=await import('@axe-core/playwright');await page.route('**/api/search',route=>route.fulfill({json:response}));await page.goto('/?q=flutter');await expect(page.getByText('A safe native result')).toBeVisible();await page.getByRole('button',{name:'Open command menu',exact:true}).click();let scan=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();expect(scan.violations).toEqual([]);await page.keyboard.press('Escape');await page.getByRole('button',{name:'Save link +',exact:true}).click();await page.getByRole('button',{name:/^Reading list/}).click();scan=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();expect(scan.violations).toEqual([]);
-});
-test('reading list opens from the homepage without any provider request',async({page})=>{
- let calls=0;await page.route('**/api/search',async route=>{calls++;await route.fulfill({json:response});});await page.addInitScript(()=>localStorage.setItem('no-group:reading-list:v1',JSON.stringify([{url:'https://example.com/',label:'Saved reference',note:'For later',savedAt:Date.now()}])));await page.goto('/');await page.getByRole('button',{name:/Open your reading list/}).click();await expect(page.getByRole('heading',{name:'Your reading list.'})).toBeVisible();await expect(page.getByRole('link',{name:'Saved reference',exact:true})).toBeVisible();expect(calls).toBe(0);await page.getByRole('button',{name:'Back to discover ↗'}).click();await expect(page.getByRole('heading',{name:'Your everyday toolkit.'})).toBeVisible();expect(calls).toBe(0);
-});
-test('keyboard actions restore search focus and local layouts remain accessible',async({page})=>{
- const {default:AxeBuilder}=await import('@axe-core/playwright');await page.route('**/api/search',route=>route.fulfill({json:response}));await page.goto('/?q=flutter');await expect(page.getByText('A safe native result')).toBeVisible();await page.getByRole('button',{name:'Open command menu',exact:true}).click();await page.getByRole('combobox',{name:'Find a command'}).fill('focus search');await page.keyboard.press('Enter');await expect(page.getByRole('searchbox',{name:'Search the web',exact:true})).toBeFocused();await page.keyboard.press('Control+j');await page.keyboard.press('Control+k');await expect(page.getByRole('dialog')).not.toBeVisible();await expect(page.getByRole('searchbox',{name:'Search the web',exact:true})).toBeFocused();for(const mode of ['Grid','Compact']){await page.getByRole('button',{name:`${mode} layout`,exact:true}).click();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);const scan=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();expect(scan.violations).toEqual([]);}
-});
-test('reading-list import validates backups and keeps existing notes',async({page})=>{
- await page.goto('/');await page.getByRole('button',{name:/Open your reading list/}).click();const input=page.locator('.reading-transfer input[type=file]');const contents=JSON.stringify({format:'no-group-reading-list',version:1,links:[{url:'https://example.com/',label:'Imported reference',note:'Recovered note',savedAt:Date.now()},{url:'javascript:alert(1)',savedAt:Date.now()}]});await input.setInputFiles({name:'backup.json',mimeType:'application/json',buffer:Buffer.from(contents)});await expect(page.getByRole('link',{name:'Imported reference',exact:true})).toBeVisible();await expect(page.getByLabel('Your note',{exact:true})).toHaveValue('Recovered note');await expect(page.getByText(/1 links imported; 1 duplicate/)).toBeVisible();await input.setInputFiles({name:'invalid.json',mimeType:'application/json',buffer:Buffer.from('{}')});await expect(page.getByText(/Import rejected\./)).toBeVisible();await expect(page.getByLabel('Your note',{exact:true})).toHaveValue('Recovered note');
+
+test('homepage passes automated accessibility checks', async ({ page }) => {
+  const { default: AxeBuilder } = await import('@axe-core/playwright');
+  await page.goto('/');
+  const scan = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+  expect(scan.violations).toEqual([]);
 });
