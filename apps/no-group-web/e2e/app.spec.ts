@@ -4,7 +4,13 @@ test('the flagship homepage introduces the group and routes through the ecosyste
   await page.goto('/');
   await expect(page.getByRole('heading', { name: /A new perspective starts here/i })).toBeVisible();
   await expect(page.getByText('Independent technology group', { exact: false })).toBeVisible();
-  await page.getByRole('link', { name: 'Ecosystem', exact: true }).click();
+  const desktopEcosystemLink = page.locator('.desktop-nav a[href="/ecosystem"]');
+  if (await desktopEcosystemLink.isVisible()) {
+    await desktopEcosystemLink.click();
+  } else {
+    await page.getByRole('button', { name: 'Open menu' }).click();
+    await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', { name: 'Ecosystem' }).click();
+  }
   await expect(page).toHaveURL(/\/ecosystem$/);
   await expect(page.getByRole('heading', { name: /A connected portfolio/i })).toBeVisible();
   await expect(page.locator('a.product-card').filter({ hasText: 'Vortex' })).toHaveAttribute('href', 'https://vortex.no-group.org');
