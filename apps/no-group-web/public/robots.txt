@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://n.o-group.org/sitemap.xml
